@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import AuthForm from './AuthForm';
 
@@ -12,36 +13,28 @@ function Register(props) {
   const [emailValdationMessage, setEmailValdationMessage] = React.useState('');
   const [passwordValdationMessage, setPasswordValdationMessage] = React.useState('');
 
-  const [isButtonHidden, setIsButtonHidden] = React.useState(true);
+  const [isFormInvalid, setIsFormInvalid] = React.useState(true);
 
   React.useEffect(() => {
-    isValidEmail && isValidPassword ? setIsButtonHidden(false) : setIsButtonHidden(true);
+    !isValidEmail || !isValidPassword ? setIsFormInvalid(true) : setIsFormInvalid(false);
   }, [isValidEmail, isValidPassword]);
 
   function handleEmailInput(evt) {
-    setEmail(evt.target.value);
+    const {value, validity: {valid}, validationMessage} = evt.target;
 
-    if(evt.target.validity.valid) {
-      setIsValidEmail(true);
-      setEmailValdationMessage('');
-    }
-    else {
-      setIsValidEmail(false);
-      setEmailValdationMessage(evt.target.validationMessage);
-    }
+    setEmail(value);
+
+    setIsValidEmail(valid);
+    setEmailValdationMessage(validationMessage);
   }
 
   function handlePasswordInput(evt) {
-    setPassword(evt.target.value);
+    const {value, validity: {valid}, validationMessage} = evt.target;
 
-    if(evt.target.validity.valid) {
-      setIsValidPassword(true);
-      setPasswordValdationMessage('');
-    }
-    else {
-      setIsValidPassword(false);
-      setPasswordValdationMessage(evt.target.validationMessage);
-    }
+    setPassword(value);
+
+    setIsValidPassword(valid);
+    setPasswordValdationMessage(validationMessage);
   }
 
   function handleSubmit(evt) {
@@ -64,12 +57,11 @@ function Register(props) {
       <AuthForm
         header="Регистрация"
         buttonText="Зарегистрироваться"
-        isButtonHidden={isButtonHidden}
-        redirectLink="/sign-in"
-        redirectLinkText="Уже зарегистрированы? Войти"
+        isButtonHidden={isFormInvalid}
         onSubmit={handleSubmit}
+        isLoading={props.isLoading}
       >
-      <input
+        <input
           className="auth__input auth__input_content_email"
           type="email"
           value={email || ''}
@@ -79,7 +71,7 @@ function Register(props) {
           required
         />
         <span
-          className={`auth__input-error${isValidEmail ? '' : ' auth__input-error_visible'}`}
+          className={`auth__input-error ${isValidEmail ? '' : 'auth__input-error_visible'}`}
         >
           {emailValdationMessage}
         </span>
@@ -94,11 +86,12 @@ function Register(props) {
           required
         />
         <span
-          className={`auth__input-error${isValidPassword ? '' : ' auth__input-error_visible'}`}
+          className={`auth__input-error ${isValidPassword ? '' : 'auth__input-error_visible'}`}
         >
           {passwordValdationMessage}
         </span>
       </AuthForm>
+      <Link className="auth__redirect-link" to="/sign-in">Уже зарегистрированы? Войти</Link>
     </main>
   );
 }

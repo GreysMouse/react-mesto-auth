@@ -8,7 +8,7 @@ function EditAvatarPopup(props) {
   const [isValidLink, setIsValidLink] = React.useState(false);
   const [linkValdationMessage, setLinkValdationMessage] = React.useState('');
 
-  const [isButtonHidden, setIsButtonHidden] = React.useState(true);
+  const [isFormInvalid, setIsFormInvalid] = React.useState(true);
 
   React.useEffect(() => {
     inputRef.current.value = '';
@@ -16,20 +16,15 @@ function EditAvatarPopup(props) {
     setIsValidLink(true);
     setLinkValdationMessage('');
 
-    setIsButtonHidden(true);
+    setIsFormInvalid(true);
   }, [props.isOpen]);
 
   function handleLinkInput(evt) {
-    if(evt.target.validity.valid) {
-      setIsValidLink(true);
-      setLinkValdationMessage('');
-      setIsButtonHidden(false);
-    }
-    else {
-      setIsValidLink(false);
-      setLinkValdationMessage(inputRef.current.validationMessage);
-      setIsButtonHidden(true);
-    }
+    const {validity: {valid}, validationMessage} = evt.target;
+
+    setIsValidLink(valid);
+    setLinkValdationMessage(validationMessage);
+    setIsFormInvalid(!valid);
   }
 
   function handleSubmit(evt) {
@@ -44,10 +39,11 @@ function EditAvatarPopup(props) {
     <PopupWithForm
       header="Обновить аватар"
       buttonText="Сохранить"
-      isButtonHidden={isButtonHidden}
+      isButtonHidden={isFormInvalid}
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSubmit={handleSubmit}
+      isLoading={props.isLoading}
     >
       <input
         className="popup__input popup__input_content_avatar"
@@ -59,7 +55,7 @@ function EditAvatarPopup(props) {
         required
       />
       <span
-        className={`popup__input-error${isValidLink ? '' : ' popup__input-error_visible'}`}
+        className={`popup__input-error ${isValidLink ? '' : 'popup__input-error_visible'}`}
       >
         {linkValdationMessage}
       </span>

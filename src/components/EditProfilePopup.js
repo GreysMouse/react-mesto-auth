@@ -16,7 +16,7 @@ function EditProfilePopup(props) {
   const [nameValdationMessage, setNameValdationMessage] = React.useState('');
   const [descriptionValdationMessage, setDescriptionValdationMessage] = React.useState('');
 
-  const [isButtonHidden, setIsButtonHidden] = React.useState(false);
+  const [isFormInvalid, setIsFormInvalid] = React.useState(false);
 
   React.useEffect(() => {  
     setName(currentUser.name);
@@ -30,33 +30,25 @@ function EditProfilePopup(props) {
   }, [props.isOpen, currentUser]);
 
   React.useEffect(() => {
-    isValidName && isValidDescription ? setIsButtonHidden(false) : setIsButtonHidden(true);
+    !isValidName || !isValidDescription ? setIsFormInvalid(true) : setIsFormInvalid(false);
   }, [isValidName, isValidDescription]);
 
   function handleNameInput(evt) {
-    setName(evt.target.value);
+    const {value, validity: {valid}, validationMessage} = evt.target;
 
-    if(evt.target.validity.valid) {
-      setIsValidName(true);
-      setNameValdationMessage('');
-    }
-    else {
-      setIsValidName(false);
-      setNameValdationMessage(evt.target.validationMessage);
-    }
+    setName(value);
+
+    setIsValidName(valid);
+    setNameValdationMessage(validationMessage);
   }
 
   function handleDescriptionInput(evt) {
-    setDescription(evt.target.value);
+    const {value, validity: {valid}, validationMessage} = evt.target;
 
-    if(evt.target.validity.valid) {
-      setIsValidDescription(true);
-      setDescriptionValdationMessage('');
-    }
-    else {
-      setIsValidDescription(false);
-      setDescriptionValdationMessage(evt.target.validationMessage);
-    }
+    setDescription(value);
+
+    setIsValidDescription(valid);
+    setDescriptionValdationMessage(validationMessage);
   }
 
   function handleSubmit(evt) {
@@ -72,10 +64,11 @@ function EditProfilePopup(props) {
     <PopupWithForm
       header="Редактировать профиль"
       buttonText="Сохранить"
-      isButtonHidden={isButtonHidden}
+      isButtonHidden={isFormInvalid}
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSubmit={handleSubmit}
+      isLoading={props.isLoading}
     >
       <input 
         className="popup__input popup__input_content_name"
@@ -89,7 +82,7 @@ function EditProfilePopup(props) {
         required 
       />
       <span
-        className={`popup__input-error${isValidName ? '' : ' popup__input-error_visible'}`}
+        className={`popup__input-error ${isValidName ? '' : 'popup__input-error_visible'}`}
       >
         {nameValdationMessage}
       </span>
@@ -105,7 +98,7 @@ function EditProfilePopup(props) {
         required
       />
       <span
-        className={`popup__input-error${isValidDescription ? '' : ' popup__input-error_visible'}`}
+        className={`popup__input-error ${isValidDescription ? '' : 'popup__input-error_visible'}`}
       >
         {descriptionValdationMessage}
       </span>

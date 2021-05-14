@@ -25,7 +25,7 @@ function Card(props) {
         <h2 className="card__title">{props.card.name}</h2>
         <div>
           <button
-            className={`card__like-button${isLiked ? ' card__like-button_checked' : ''}`}
+            className={`card__like-button ${isLiked ? 'card__like-button_checked' : ''}`}
             type="button"
             aria-label="Нравится"
             onClick={handleLikeClick}
@@ -34,7 +34,7 @@ function Card(props) {
         </div>
       </div>
       <button
-        className={`card__delete-button${currentUser._id === props.card.owner._id ? '' : ' card__delete-button_hidden'}`}
+        className={`card__delete-button ${currentUser._id === props.card.owner._id ? '' : 'card__delete-button_hidden'}`}
         type="button"
         aria-label="Удалить"
         onClick={handleDeleteClick}

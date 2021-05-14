@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom';
-
 function AuthForm(props) {
   return (
     <div className="auth__container">
@@ -7,14 +5,13 @@ function AuthForm(props) {
       <form className="auth__form" onSubmit={props.onSubmit} noValidate>
         {props.children}
         <button
-          className={`auth__button${props.isButtonHidden ? ' auth__button_disabled' : ''}`}
+          className={`auth__button ${props.isButtonHidden ? 'auth__button_disabled' : ''}`}
           type="submit"
           disabled={props.isButtonHidden}
         >
-          {props.buttonText}
+          {props.isLoading ? 'Загрузка...' : props.buttonText}
         </button>
       </form>
-      <Link className="auth__redirect-link" to={props.redirectLink}>{props.redirectLinkText}</Link>
     </div>
   );
 }
