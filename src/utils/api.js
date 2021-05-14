@@ -81,19 +81,9 @@ class Api {
     }).then(this._checkResponse);
   }
 
-  checkLike(cardId) {
+  changeLikeCardStatus(cardId, method) {
     return fetch(`${this._baseUrl}/${this._cohort}/cards/likes/${cardId}`, {
-      method: 'PUT',
-      headers: {
-        authorization: this._token,
-        'content-type': 'application/json'
-      }
-    }).then(this._checkResponse);
-  }
-
-  uncheckLike(cardId) {
-    return fetch(`${this._baseUrl}/${this._cohort}/cards/likes/${cardId}`, {
-      method: 'DELETE',
+      method: method,
       headers: {
         authorization: this._token,
         'content-type': 'application/json'

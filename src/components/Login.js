@@ -37,9 +37,8 @@ function Login(props) {
       <AuthForm
         header="Вход"
         buttonText="Войти"
-        redirectLink=""
-        redirectLinkText=""
         onSubmit={handleSubmit}
+        isLoading={props.isLoading}
       >
         <input
           className="auth__input auth__input_content_email"
@@ -51,7 +50,7 @@ function Login(props) {
           required
         />
         <span
-          className={`auth__input-error${!isEmptyEmail ? '' : ' auth__input-error_visible'}`}
+          className={`auth__input-error ${!isEmptyEmail ? '' : 'auth__input-error_visible'}`}
         >
           Заполните это поле
         </span>
@@ -65,7 +64,7 @@ function Login(props) {
           required
         />
         <span
-          className={`auth__input-error${!isEmptyPassword ? '' : ' auth__input-error_visible'}`}
+          className={`auth__input-error ${!isEmptyPassword ? '' : 'auth__input-error_visible'}`}
         >
           Заполните это поле
         </span>

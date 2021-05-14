@@ -12,7 +12,7 @@ function AddPlacePopup(props) {
   const [titleValdationMessage, setTitleValdationMessage] = React.useState('');
   const [linkValdationMessage, setLinkValdationMessage] = React.useState('');
 
-  const [isButtonHidden, setIsButtonHidden] = React.useState(true);
+  const [isFormInvalid, setIsFormInvalid] = React.useState(true);
 
   React.useEffect(() => {
     setTitle('');
@@ -26,33 +26,25 @@ function AddPlacePopup(props) {
   }, [props.isOpen]);
 
   React.useEffect(() => {
-    isValidTitle && isValidLink ? setIsButtonHidden(false) : setIsButtonHidden(true);
+    !isValidTitle || !isValidLink ? setIsFormInvalid(true) : setIsFormInvalid(false);
   }, [isValidTitle, isValidLink]);
 
   function handleTitleInput(evt) {
-    setTitle(evt.target.value);
+    const {value, validity: {valid}, validationMessage} = evt.target;
 
-    if(evt.target.validity.valid) {
-      setIsValidTitle(true);
-      setTitleValdationMessage('');
-    }
-    else {
-      setIsValidTitle(false);
-      setTitleValdationMessage(evt.target.validationMessage);
-    }
+    setTitle(value);
+
+    setIsValidTitle(valid);
+    setTitleValdationMessage(validationMessage);
   }
 
   function handleLinkInput(evt) {
-    setLink(evt.target.value);
+    const {value, validity: {valid}, validationMessage} = evt.target;
 
-    if(evt.target.validity.valid) {
-      setIsValidLink(true);
-      setLinkValdationMessage('');
-    }
-    else {
-      setIsValidLink(false);
-      setLinkValdationMessage(evt.target.validationMessage);
-    }
+    setLink(value);
+
+    setIsValidLink(valid);
+    setLinkValdationMessage(validationMessage);
   }
 
   function handleSubmit(evt) {
@@ -68,10 +60,11 @@ function AddPlacePopup(props) {
     <PopupWithForm
       header="Новое место"
       buttonText="Создать"
-      isButtonHidden={isButtonHidden}
+      isButtonHidden={isFormInvalid}
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSubmit={handleSubmit}
+      isLoading={props.isLoading}
     >
       <input
         className="popup__input popup__input_content_title"
@@ -85,7 +78,7 @@ function AddPlacePopup(props) {
         required
       />
       <span
-        className={`popup__input-error${isValidTitle ? '' : ' popup__input-error_visible'}`}
+        className={`popup__input-error ${isValidTitle ? '' : 'popup__input-error_visible'}`}
       >
         {titleValdationMessage}
       </span>
@@ -99,7 +92,7 @@ function AddPlacePopup(props) {
         required
       />
       <span
-        className={`popup__input-error${isValidLink ? '' : ' popup__input-error_visible'}`}
+        className={`popup__input-error ${isValidLink ? '' : 'popup__input-error_visible'}`}
       >
         {linkValdationMessage}
       </span>
