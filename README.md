@@ -3,7 +3,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 # Проект №4: __"Место"__
-_https://greysmouse.github.io/mesto/index.html_
+https://greysmouse.github.io/react-mesto-auth
 
 ## О проекте
 ------
