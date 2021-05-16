@@ -57,7 +57,7 @@ function Register(props) {
       <AuthForm
         header="Регистрация"
         buttonText="Зарегистрироваться"
-        isButtonHidden={isFormInvalid}
+        isFormInvalid={isFormInvalid}
         onSubmit={handleSubmit}
         isLoading={props.isLoading}
       >

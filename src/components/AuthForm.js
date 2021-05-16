@@ -5,9 +5,9 @@ function AuthForm(props) {
       <form className="auth__form" onSubmit={props.onSubmit} noValidate>
         {props.children}
         <button
-          className={`auth__button ${props.isButtonHidden ? 'auth__button_disabled' : ''}`}
+          className={`auth__button ${props.isFormInvalid ? 'auth__button_disabled' : ''}`}
           type="submit"
-          disabled={props.isButtonHidden}
+          disabled={props.isFormInvalid || props.isLoading}
         >
           {props.isLoading ? 'Загрузка...' : props.buttonText}
         </button>

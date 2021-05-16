@@ -60,7 +60,7 @@ function AddPlacePopup(props) {
     <PopupWithForm
       header="Новое место"
       buttonText="Создать"
-      isButtonHidden={isFormInvalid}
+      isFormInvalid={isFormInvalid}
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSubmit={handleSubmit}

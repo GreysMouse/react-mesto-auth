@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Redirect, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 
 import ProtectedRoute from './ProtectedRoute';
 
@@ -18,6 +18,7 @@ import InfoToolTipPopup from './InfoToolTipPopup';
 import api from '../utils/api';
 import authApi from '../utils/authApi';
 import CurrentUserContext from '../contexts/CurrentUserContext';
+import IsLoggedInContext from '../contexts/IsLoggedInContext';
 
 function App() {
   const [isRegistered, setIsRegistered] = React.useState(false);
@@ -230,70 +231,72 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <div className="page">
-        <div className="page__container">
-          <Switch>
-            <Route path="/sign-up">
-              <Header
-                redirectLink="/sign-in"
-                redirectText="Войти"
-              />
-              <Register onRegister={handleRegister} isLoading={isLoading} />
-            </Route>
-            <Route path="/sign-in">
-              <Header
-                redirectLink="/sign-up"
-                redirectText="Регистрация"
-              />
-              <Login handleLogin={handleLogin} isLoading={isLoading} />
-            </Route>
-            {isLoggedIn ? <ProtectedRoute path="/">
-              <Header
-                redirectLink="/"
-                redirectText="Выйти"
-                onRedirect={handleSignOut}
-                userInfo={userInfo}
-                isMenuOpen={isMenuOpen}
-                onMenuOpen={handleMenuButtonClick}
-              />
-              <Main
-                onEditAvatar={handleEditAvatarClick}
-                onEditProfile={handleEditProfileClick}
-                onAddPlace={handleAddPlaceClick}
-                onOpenCard={handleCardClick}
-                onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
-                cards={cards}
-              />
-              <Footer />
-            </ProtectedRoute> : <Redirect to="/sign-in" />}
-          </Switch>
-          <EditAvatarPopup
-            isOpen={isEditAvatarPopupOpen}
-            onClose={closeAllPopups}
-            onUpdateAvatar={handleUpdateAvatar}
-            isLoading={isLoading}
-          />
-          <EditProfilePopup
-            isOpen={isEditProfilePopupOpen}
-            onClose={closeAllPopups}
-            onUpdateUser={handleUpdateUser}
-            isLoading={isLoading}
-          />
-          <AddPlacePopup
-            isOpen={isAddPlacePopupOpen}
-            onClose={closeAllPopups}
-            onAddPlace={handleAddPlace}
-            isLoading={isLoading}
-          />
-          <ImagePopup card={selectedCard} isOpen={isCardSelected} onClose={closeAllPopups} />
-          <InfoToolTipPopup
-            isOpen={isInfoToolTipPopupOpen}
-            onClose={closeAllPopups}
-            isRegistered={isRegistered}
-          />
-        </div> 
-      </div>
+      <IsLoggedInContext.Provider value={isLoggedIn}>
+        <div className="page">
+          <div className="page__container">
+            <Switch>
+              <Route path="/sign-up">
+                <Header
+                  redirectLink="/sign-in"
+                  redirectText="Войти"
+                />
+                <Register onRegister={handleRegister} isLoading={isLoading} />
+              </Route>
+              <Route path="/sign-in">
+                <Header
+                  redirectLink="/sign-up"
+                  redirectText="Регистрация"
+                />
+                <Login handleLogin={handleLogin} isLoading={isLoading} />
+              </Route>
+              <ProtectedRoute path="/">
+                <Header
+                  redirectLink="/"
+                  redirectText="Выйти"
+                  onRedirect={handleSignOut}
+                  userInfo={userInfo}
+                  isMenuOpen={isMenuOpen}
+                  onMenuOpen={handleMenuButtonClick}
+                />
+                <Main
+                  onEditAvatar={handleEditAvatarClick}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onOpenCard={handleCardClick}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                  cards={cards}
+                />
+                <Footer />
+              </ProtectedRoute>
+            </Switch>
+            <EditAvatarPopup
+              isOpen={isEditAvatarPopupOpen}
+              onClose={closeAllPopups}
+              onUpdateAvatar={handleUpdateAvatar}
+              isLoading={isLoading}
+            />
+            <EditProfilePopup
+              isOpen={isEditProfilePopupOpen}
+              onClose={closeAllPopups}
+              onUpdateUser={handleUpdateUser}
+              isLoading={isLoading}
+            />
+            <AddPlacePopup
+              isOpen={isAddPlacePopupOpen}
+              onClose={closeAllPopups}
+              onAddPlace={handleAddPlace}
+              isLoading={isLoading}
+            />
+            <ImagePopup card={selectedCard} isOpen={isCardSelected} onClose={closeAllPopups} />
+            <InfoToolTipPopup
+              isOpen={isInfoToolTipPopupOpen}
+              onClose={closeAllPopups}
+              isRegistered={isRegistered}
+            />
+          </div> 
+        </div>
+      </IsLoggedInContext.Provider>
     </CurrentUserContext.Provider>
   );
 }
