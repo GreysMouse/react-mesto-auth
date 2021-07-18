@@ -4,7 +4,7 @@ import CurrentUserContext from '../contexts/CurrentUserContext';
 
 function Card(props) {
   const currentUser = React.useContext(CurrentUserContext);
-  const isLiked = props.card.likes.some(liked => liked._id === currentUser._id);
+  const isLiked = props.card.likes.some(liked => liked === currentUser._id);
 
   function handleClick() {
     props.onCardClick(props.card);
@@ -34,7 +34,7 @@ function Card(props) {
         </div>
       </div>
       <button
-        className={`card__delete-button ${currentUser._id === props.card.owner._id ? '' : 'card__delete-button_hidden'}`}
+        className={`card__delete-button ${currentUser._id === props.card.owner ? '' : 'card__delete-button_hidden'}`}
         type="button"
         aria-label="Удалить"
         onClick={handleDeleteClick}

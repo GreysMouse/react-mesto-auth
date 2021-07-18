@@ -43,37 +43,33 @@ function App() {
   const history = useHistory();
 
   React.useEffect(() => {
-    const token = localStorage.getItem('token');
-    
-    if(token) {
-      authApi.getContent(token).then(user => {
-        setUserInfo({
-          email: user.data.email
-        });
-        
-        setIsLoggedIn(true);
-        history.push("/");
-        
-        console.log('Авторизация прошла успешно!');
-      }).catch(err => {
-        console.log(`${err}. Не удалось авторизоваться.`);
+    authApi.getContent().then(user => {
+      setUserInfo({
+        email: user.email
       });
-    }
-    
+      
+      setIsLoggedIn(true);
+      history.push('/');
+      
+      console.log('Авторизация прошла успешно!');
+    }).catch(err => {
+      console.log(`${err}. Не удалось авторизоваться.`);
+    });
+
     return () => setUserInfo({});
   }, [history]);
 
   React.useEffect(() => {
     api.getInitialCards().then(cards => {  
       setCards(cards);
-    
+      
       console.log('Карточки получены!');
     }).catch(err => {
       console.log(`${err}. Не удалось получить карточки с сервера.`);
     });
 
     return () => setCards([]);
-  }, []);
+  }, [isLoggedIn]);
 
   React.useEffect(() => {
     api.getUserInfo().then(user => {
@@ -87,14 +83,14 @@ function App() {
     return () => {
       setCurrentUser({});
     };
-  }, []);
+  }, [isLoggedIn]);
 
   function handleRegister({email, password}) {
     setIsLoading(true);
 
     authApi.register({email, password}).then(data => {
       setIsRegistered(true);
-      history.push("/sign-in");
+      history.push('/signin');
 
       console.log('Регистрация прошла успешно! Введите логин и пароль для входа в аккаунт.');
     }).catch(err => {
@@ -114,10 +110,9 @@ function App() {
       setUserInfo({
         email: email
       });
-      
+
       setIsLoggedIn(true);
-      history.push("/");
-      localStorage.setItem('token', data.token);
+      history.push('/');
 
       console.log('Авторизация прошла успешно!');
     }).catch(err => {
@@ -128,12 +123,17 @@ function App() {
   }
 
   function handleSignOut() {
-    setIsLoggedIn(false);
-    localStorage.removeItem('token');
+    authApi.logout().then(() => {
+      setIsLoggedIn(false);
+      
+      console.log('Выполнен выход из аккаунта.');
+    }).catch(err => {
+      console.log(`${err}. Не удалось выйти из аккаунта.`);
+    })
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some(liked => liked._id === currentUser._id);
+    const isLiked = card.likes.some(liked => liked === currentUser._id);
 
     api.changeLikeCardStatus(card._id, isLiked ? 'DELETE' : 'PUT').then(updatedCard => {
       setCards((cards) => cards.map(c => c._id === card._id ? updatedCard : c));
@@ -235,23 +235,23 @@ function App() {
         <div className="page">
           <div className="page__container">
             <Switch>
-              <Route path="/sign-up">
+              <Route path="/signup">
                 <Header
-                  redirectLink="/sign-in"
+                  redirectLink="/signin"
                   redirectText="Войти"
                 />
                 <Register onRegister={handleRegister} isLoading={isLoading} />
               </Route>
-              <Route path="/sign-in">
+              <Route path="/signin">
                 <Header
-                  redirectLink="/sign-up"
+                  redirectLink="/signup"
                   redirectText="Регистрация"
                 />
                 <Login handleLogin={handleLogin} isLoading={isLoading} />
               </Route>
               <ProtectedRoute path="/">
                 <Header
-                  redirectLink="/"
+                  redirectLink="/signin"
                   redirectText="Выйти"
                   onRedirect={handleSignOut}
                   userInfo={userInfo}

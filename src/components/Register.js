@@ -91,7 +91,7 @@ function Register(props) {
           {passwordValdationMessage}
         </span>
       </AuthForm>
-      <Link className="auth__redirect-link" to="/sign-in">Уже зарегистрированы? Войти</Link>
+      <Link className="auth__redirect-link" to="/signin">Уже зарегистрированы? Войти</Link>
     </main>
   );
 }

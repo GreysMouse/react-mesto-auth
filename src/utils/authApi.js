@@ -12,7 +12,7 @@ class AuthApi {
     return fetch(`${this._baseUrl}/signup`, {
       method: 'POST',
       headers: {
-        "Content-Type": "application/json" 
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         password: password,
@@ -24,8 +24,9 @@ class AuthApi {
   authorize({password, email}) {
     return fetch(`${this._baseUrl}/signin`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
-        "Content-Type": "application/json" 
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         password: password,
@@ -33,20 +34,30 @@ class AuthApi {
       })
     }).then(this._checkResponse);
   }
+
+  logout() {
+    return fetch(`${this._baseUrl}/logout`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }).then(this._checkResponse);
+  }
   
-  getContent(token) {
+  getContent() {
     return fetch(`${this._baseUrl}/users/me`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
-        "Content-Type": "application/json",
-        "Authorization" : `Bearer ${token}`
+        'Content-Type': 'application/json',
       }
     }).then(this._checkResponse);
   }
 }
 
 const authApi = new AuthApi({
-  baseUrl: 'https://auth.nomoreparties.co'
+  baseUrl: 'https://api.mesto.greysmouse.nomoredomains.club',
 });
 
 export default authApi;
